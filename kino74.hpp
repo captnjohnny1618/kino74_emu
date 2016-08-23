@@ -3,7 +3,8 @@
 #include <cstdlib>
 
 class kino74{
-    
+
+public:
     // Registers:
     unsigned char ACC;
     unsigned char B;
@@ -17,9 +18,8 @@ class kino74{
     // Memory:
     unsigned char RAM[16];
 
-public:
     void initialize();
-    void exec_cycle();
+    int exec_cycle();
     void print_state();
     void load_program(std::string);
     void dump_ram();    
@@ -64,7 +64,7 @@ void kino74::dump_ram(){
     std::cout << "--------------------------------" << std::endl;
 }
 
-void kino74::exec_cycle(){
+int kino74::exec_cycle(){
     // Fetch Cycle (T1-T3)
     // ----------------------------------------
     // (1) Address State (Load MAR with PC)
@@ -84,15 +84,15 @@ void kino74::exec_cycle(){
     unsigned char address=IR & 0x0F;
     
     switch (op_code){
-    // LDA
+        // LDA
     case 0x00:
         //T4 (Mem address from IR to MAR)
         MAR=address;
         //T5 (Grab data from RAM, store in ACC)
         ACC=RAM[MAR];
         //T6 (NoOp)        
-        break;
-    // ADD
+        return 0;
+        // ADD
     case 0x01:
         //T4 (Mem address from IR to MAR)
         MAR=address;
@@ -100,8 +100,8 @@ void kino74::exec_cycle(){
         B=RAM[MAR];
         //T6 (Add contents of ACC and B and store in ACC)
         ACC=ACC+B;
-        break;
-    // SUB
+        return 0;
+        // SUB
     case 0x02:
         //T4 (Mem address from IR to MAR)
         MAR=address;
@@ -109,19 +109,20 @@ void kino74::exec_cycle(){
         B=RAM[MAR];
         //T6 (Subtract contents of B from ACC and store in ACC)
         ACC=ACC-B;
-        break;        
-    // OUT
+        return 0;                
+        // OUT
     case 0x0e:
         //T4 (Put contents of ACC on OUT)
         OUT=ACC;
         //T5 (NoOp)
         //T6 (NoOp)
-        break;        
-    // HLT
+        return 0;        
+
+        // HLT
     case 0x0f:
         //No execution cyle
         //HLT stops clock, so here we'll just exit
-        exit(0);
+        return 1;
         break;
 
     default:
