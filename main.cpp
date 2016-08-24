@@ -1,4 +1,5 @@
 #include "kino74.hpp"
+#include <unistd.h>
 
 int main(int argc, char ** argv){
 
@@ -10,8 +11,10 @@ int main(int argc, char ** argv){
     myKino74.load_program(prog_file);    
     myKino74.dump_ram();
 
-    while (1){
-        myKino74.exec_cycle();
+    int hlt = 0;
+    while (!hlt){
+        hlt=myKino74.exec_cycle();
         myKino74.print_state();
+	sleep(1); 
     }    
 }

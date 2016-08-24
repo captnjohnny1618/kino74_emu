@@ -45,10 +45,8 @@ int main(int argc, char ** argv){
     int hlt=0;
     while (!hlt){
         hlt=myKino74.exec_cycle();
-        //myKino74.print_state();
         update_register_vis(myKino74,viswin);
-        //wrefresh(viswin);
-        sleep(2);
+        sleep(1);
     }
 
     delwin(ramwin);
